@@ -9,6 +9,7 @@
 #import "FISReposTableViewController.h"
 #import "FISReposDataStore.h"
 #import "FISGithubRepository.h"
+#import "FISGithubAPIClient.h"
 
 @interface FISReposTableViewController ()
 @property (strong, nonatomic) FISReposDataStore *dataStore;
@@ -37,6 +38,7 @@
     [self.dataStore getRepositoriesWithCompletion:^(BOOL success) {
         [self.tableView reloadData];
     }];
+
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -72,6 +74,24 @@
     FISGithubRepository *repo = self.dataStore.repositories[indexPath.row];
     cell.textLabel.text = repo.fullName;
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    FISGithubRepository *repo = self.dataStore.repositories[indexPath.row];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self.dataStore toggleStarForRepo:repo CompletionBlock:^(BOOL starred) {
+        if (starred) {
+            NSString *message = [NSString stringWithFormat:@"You just starred %@", repo.fullName];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Repo Starred"  message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+        } else
+        {
+            NSString *message = [NSString stringWithFormat:@"You just unstarred %@", repo.fullName];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Repo Unstarred"  message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+        }
+    }];
 }
 
 @end
