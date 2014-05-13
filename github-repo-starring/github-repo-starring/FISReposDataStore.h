@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class FISGithubRepository;
 @interface FISReposDataStore : NSObject
 
 @property (strong, nonatomic) NSMutableArray *repositories;
@@ -15,5 +16,5 @@
 + (instancetype)sharedDataStore;
 
 - (void)getRepositoriesWithCompletion:(void (^)(BOOL success))completionBlock;
-
+- (void)toggleStarForRepo:(FISGithubRepository *)repo CompletionBlock:(void(^)(BOOL starred))completionBlock;
 @end
