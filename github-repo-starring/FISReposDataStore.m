@@ -32,26 +32,35 @@
 -(void)getRepositoriesWithCompletion:(void (^)(BOOL))completionBlock
 {
     [FISGithubAPIClient getRepositoriesWithCompletion:^(NSArray *repoDictionaries) {
-        for (NSDictionary *repoDictionary in repoDictionaries) {
-            [self.repositories addObject:[FISGithubRepository repoFromDictionary:repoDictionary]];
-        }
-        completionBlock(YES);
+        
+         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+             for (NSDictionary *repoDictionary in repoDictionaries) {
+                 [self.repositories addObject:[FISGithubRepository repoFromDictionary:repoDictionary]];
+             }
+             completionBlock(YES);
+         }];
     }];
 }
 
 -(void)toggleStarForRepo:(FISGithubRepository *)repo CompletionBlock:(void (^)(BOOL))completionBlock
 {
     [FISGithubAPIClient checkIfRepoIsStarredWithFullName:repo.fullName CompletionBlock:^(BOOL starred) {
-        if (starred) {
-            [FISGithubAPIClient unstarRepoWithFullName:repo.fullName CompletionBlock:^{
-                completionBlock(NO);
-            }];
-        } else
-        {
-            [FISGithubAPIClient starRepoWithFullName:repo.fullName CompletionBlock:^{
-                completionBlock(YES);
-            }];
-        }
+        
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            if (starred) {
+                
+                
+                [FISGithubAPIClient unstarRepoWithFullName:repo.fullName CompletionBlock:^{
+                    completionBlock(NO);
+                }];
+                
+            } else
+            {
+                [FISGithubAPIClient starRepoWithFullName:repo.fullName CompletionBlock:^{
+                    completionBlock(YES);
+                }];
+            }
+        }];
     }];
 }
 @end
