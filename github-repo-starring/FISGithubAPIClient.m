@@ -46,10 +46,10 @@ NSString *const GITHUB_API_URL=@"https://api.github.com";
 
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
         BOOL success=NO;
+        
         if (!error) {
-            if (httpResponse.statusCode == 204 ) {
+            if (((NSHTTPURLResponse *)response).statusCode == 204 ) {
                 success=YES;
                 
             }
