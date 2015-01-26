@@ -36,9 +36,11 @@
     self.tableView.accessibilityLabel=@"Repo Table View";
     self.dataStore = [FISReposDataStore sharedDataStore];
     [self.dataStore getRepositoriesWithCompletion:^(BOOL success) {
-        [self.tableView reloadData];
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [self.tableView reloadData];
+        }];
     }];
-
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -82,14 +84,21 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self.dataStore toggleStarForRepo:repo CompletionBlock:^(BOOL starred) {
         if (starred) {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+
             NSString *message = [NSString stringWithFormat:@"You just starred %@", repo.fullName];
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Repo Starred"  message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alertView show];
+            }];
+             
         } else
         {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+
             NSString *message = [NSString stringWithFormat:@"You just unstarred %@", repo.fullName];
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Repo Unstarred"  message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alertView show];
+            }];
         }
     }];
 }

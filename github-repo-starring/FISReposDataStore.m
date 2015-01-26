@@ -33,12 +33,10 @@
 {
     [FISGithubAPIClient getRepositoriesWithCompletion:^(NSArray *repoDictionaries) {
         
-         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
              for (NSDictionary *repoDictionary in repoDictionaries) {
                  [self.repositories addObject:[FISGithubRepository repoFromDictionary:repoDictionary]];
              }
              completionBlock(YES);
-         }];
     }];
 }
 
@@ -46,7 +44,6 @@
 {
     [FISGithubAPIClient checkIfRepoIsStarredWithFullName:repo.fullName CompletionBlock:^(BOOL starred) {
         
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             if (starred) {
                 
                 
@@ -60,7 +57,6 @@
                     completionBlock(YES);
                 }];
             }
-        }];
     }];
 }
 @end

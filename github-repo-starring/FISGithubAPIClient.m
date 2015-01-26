@@ -37,29 +37,25 @@ NSString *const GITHUB_API_URL=@"https://api.github.com";
 
 +(void)checkIfRepoIsStarredWithFullName:(NSString *)fullName CompletionBlock:(void (^)(BOOL))completionBlock
 {
-    NSString *url = [NSString stringWithFormat:@"%@/user/starred/%@?client_id=%@&client_secret=%@",GITHUB_API_URL,fullName, GITHUB_CLIENT_ID,GITHUB_CLIENT_SECRET];
+    NSString *url = [NSString stringWithFormat:@"%@/user/starred/%@?access_token=%@",GITHUB_API_URL,fullName, GITHUB_ACCESS_TOKEN];
     
-    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    sessionConfiguration.HTTPAdditionalHeaders = @{@"username":GITHUB_ACCESS_TOKEN};
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
     
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration];
+
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
-            
-            if (!error) {
-                if (httpResponse.statusCode == 204 ) {
-                    completionBlock(YES);
-                }
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
+        BOOL success=NO;
+        if (!error) {
+            if (httpResponse.statusCode == 204 ) {
+                success=YES;
+                
             }
-            else {
-                if (httpResponse.statusCode == 404 ) {
-                    completionBlock(NO);
-                }
-            }
-        }];
+        }
+        
+        completionBlock(success);
     }];
     
     //    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] init];
@@ -80,10 +76,10 @@ NSString *const GITHUB_API_URL=@"https://api.github.com";
 
 +(void)starRepoWithFullName:(NSString *)fullName CompletionBlock:(void (^)(void))completionBlock
 {
-    NSString *url = [NSString stringWithFormat:@"%@/user/starred/%@?client_id=%@&client_secret=%@",GITHUB_API_URL,fullName, GITHUB_CLIENT_ID,GITHUB_CLIENT_SECRET];
+    
+    NSString *url = [NSString stringWithFormat:@"%@/user/starred/%@?access_token=%@",GITHUB_API_URL,fullName, GITHUB_ACCESS_TOKEN];
     
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    sessionConfiguration.HTTPAdditionalHeaders = @{@"username":GITHUB_ACCESS_TOKEN};
     NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     request.HTTPMethod = @"PUT";
@@ -115,10 +111,9 @@ NSString *const GITHUB_API_URL=@"https://api.github.com";
 
 +(void)unstarRepoWithFullName:(NSString *)fullName CompletionBlock:(void (^)(void))completionBlock
 {
-    NSString *url = [NSString stringWithFormat:@"%@/user/starred/%@?client_id=%@&client_secret=%@",GITHUB_API_URL,fullName, GITHUB_CLIENT_ID,GITHUB_CLIENT_SECRET];
+    NSString *url = [NSString stringWithFormat:@"%@/user/starred/%@?access_token=%@",GITHUB_API_URL,fullName, GITHUB_ACCESS_TOKEN];
  
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    sessionConfiguration.HTTPAdditionalHeaders = @{@"username":GITHUB_ACCESS_TOKEN};
     NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     request.HTTPMethod = @"DELETE";
