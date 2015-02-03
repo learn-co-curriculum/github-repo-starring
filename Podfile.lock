@@ -1,25 +1,4 @@
 PODS:
-  - AFNetworking (2.4.1):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-    - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.4.1):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.4.1):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.4.1)
-  - AFNetworking/Security (2.4.1)
-  - AFNetworking/Serialization (2.4.1)
-  - AFNetworking/UIKit (2.4.1):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
   - Expecta (0.2.4)
   - KIF (3.0.8):
     - KIF/XCTest
@@ -34,7 +13,6 @@ PODS:
   - Swizzlean (0.2.0)
 
 DEPENDENCIES:
-  - AFNetworking
   - Expecta (~> 0.2.4)
   - KIF (~> 3.0)
   - OCMockito (~> 1.0)
@@ -47,7 +25,6 @@ EXTERNAL SOURCES:
     :git: https://github.com/specta/specta.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
   Expecta: 112bcafa2304ee0f3c5e586505f24555a47b25d5
   KIF: 2db5e8cf59136dd1267d49cca0d55883389b09d3
   OCHamcrest: b464725bbb48d0f1cd9c6f4ec3cb35fe0c4f2b94

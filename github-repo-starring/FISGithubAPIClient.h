@@ -21,5 +21,7 @@ NSString *const GITHUB_API_URL;
  */
 
 +(void)getRepositoriesWithCompletion:(void (^)(NSArray *repoDictionaries))completionBlock;
-
++(void)checkIfRepoIsStarredWithFullName:(NSString *)fullName CompletionBlock:(void (^)(BOOL starred))completionBlock;
++(void)starRepoWithFullName:(NSString *)fullName CompletionBlock:(void (^)(void))completionBlock;
++(void)unstarRepoWithFullName:(NSString *)fullName CompletionBlock:(void (^)(void))completionBlock;
 @end
