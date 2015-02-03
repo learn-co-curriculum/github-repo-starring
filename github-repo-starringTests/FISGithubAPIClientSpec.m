@@ -44,7 +44,8 @@ describe(@"FISGithubAPIClient", ^{
             expect([FISGithubAPIClient class]).to.respondTo(@selector(getRepositoriesWithCompletion:));
         });
 
-        it(@"Should get repositories", ^AsyncBlock{
+        it(@"Should get repositories",  ^{
+            waitUntil(^(DoneCallback done) {
             [FISGithubAPIClient getRepositoriesWithCompletion:^(NSArray *repoDictionaries) {
                 expect(repoDictionaries).toNot.beNil();
                 expect(repoDictionaries.count).to.equal(2);
@@ -60,7 +61,8 @@ describe(@"FISGithubAPIClient", ^{
             expect([FISGithubAPIClient class]).to.respondTo(@selector(checkIfRepoIsStarredWithFullName:CompletionBlock:));
         });
 
-        it(@"Should respond NO when not already starred", ^AsyncBlock{
+        it(@"Should respond NO when not already starred",  ^{
+            waitUntil(^(DoneCallback done) {
             __block BOOL calledGithubAPI=NO;
             [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
                 if ([request.URL.host isEqualToString:@"api.github.com"]&&[request.URL.path isEqualToString:@"/user/starred/wycats/merb-core"] && [request.HTTPMethod isEqualToString:@"GET"])
@@ -82,7 +84,8 @@ describe(@"FISGithubAPIClient", ^{
             expect(calledGithubAPI).will.beTruthy(); //Check that the correct Request was called
         });
 
-        it(@"Should respond YES when already starred", ^AsyncBlock{
+            it(@"Should respond YES when already starred",  ^{
+                waitUntil(^(DoneCallback done) {
             __block BOOL calledGithubAPI=NO;
             [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
                 if ([request.URL.host isEqualToString:@"api.github.com"]&&[request.URL.path isEqualToString:@"/user/starred/wycats/merb-core"] && [request.HTTPMethod isEqualToString:@"GET"])
@@ -110,7 +113,8 @@ describe(@"FISGithubAPIClient", ^{
     });
 
     describe(@"Star Repo", ^{
-        it(@"should star the repo", ^AsyncBlock {
+        it(@"should star the repo",  ^{
+            waitUntil(^(DoneCallback done) {
             __block BOOL calledGithubAPI=NO;
             [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
                 if ([request.URL.host isEqualToString:@"api.github.com"]&&[request.URL.path isEqualToString:@"/user/starred/wycats/merb-core"] && [request.HTTPMethod isEqualToString:@"PUT"])
@@ -133,7 +137,8 @@ describe(@"FISGithubAPIClient", ^{
     });
 
     describe(@"Unstar Repo", ^{
-        it(@"Should unstar the repo", ^AsyncBlock{
+        it(@"Should unstar the repo",  ^{
+            waitUntil(^(DoneCallback done) {
             __block BOOL calledGithubAPI=NO;
             [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
                 if ([request.URL.host isEqualToString:@"api.github.com"]&&[request.URL.path isEqualToString:@"/user/starred/wycats/merb-core"] && [request.HTTPMethod isEqualToString:@"DELETE"])
