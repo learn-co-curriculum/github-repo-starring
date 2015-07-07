@@ -8,16 +8,10 @@
 
 #import "Specta.h"
 #define EXP_SHORTHAND
-#define HC_SHORTHAND
-#define MOCKITO_SHORTHAND
-#import "FISGithubRepository.h"
-
-#import <KIF/KIF.h>
 #import <Expecta.h>
 #import "FISGithubAPIClient.h"
 #import <OHHTTPStubs.h>
-#import <OCHamcrest/OCHamcrest.h>
-#import <OCMockito/OCMockito.h>
+
 
 SpecBegin(FISGithubAPIClient)
 
@@ -25,110 +19,155 @@ describe(@"FISGithubAPIClient", ^{
     
     __block NSArray *repositoryArray;
     NSString *fullName = @"wycats/merb-core";
-//    beforeAll(^{
-//        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-//            if ([request.URL.host isEqualToString:@"api.github.com"]&&[request.URL.path isEqualToString:@"/repositories"])
-//            {
-//                return YES;
-//            }
-//            else
-//            {
-//                return NO;
-//            }
-//        } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-//            return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"repositories.json", nil) statusCode:200 headers:@{@"Content-Type": @"application/json"}];
-//        }];
-//        
-       //
-//        // mock creation
-//        FISGithubRepository *mockRepo = mock([FISGithubRepository class]);
-//        
-//        // using mock object
-//        [mockArray removeAllObjects];
-//        
-//        // verification
-//        [verify(mockArray) addObject:@"one"];
-//        [verify(mockArray) removeAllObjects];
-    //    });
+    beforeAll(^{
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            if ([request.URL.host isEqualToString:@"api.github.com"]&&[request.URL.path isEqualToString:@"/repositories"])
+            {
+                return YES;
+            }
+            else
+            {
+                return NO;
+            }
+        } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"repositories.json", nil) statusCode:200 headers:@{@"Content-Type": @"application/json"}];
+        }];
+        
+        NSData *data = [NSData dataWithContentsOfFile:OHPathForFileInBundle(@"repositories.json", nil)];
+        repositoryArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    });
     
-    describe(@"repositories", ^{
-        context(@"exist", ^{
-            
+    
+    describe(@"Get Repositories", ^{
+        
+        it(@"Should respond to getrepositories class method selector", ^{
+            expect([FISGithubAPIClient class]).to.respondTo(@selector(getRepositoriesWithCompletion:));
+        });
+
+        it(@"Should get repositories",  ^{
             waitUntil(^(DoneCallback done) {
-                
-                NSData *data = [NSData dataWithContentsOfFile:OHPathForFileInBundle(@"repositories.json", nil)];
-                repositoryArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-                
-                
                 [FISGithubAPIClient getRepositoriesWithCompletion:^(NSArray *repoDictionaries) {
-                    it(@"should return a dictionary of repositories", ^{
-                        expect(repoDictionaries).to.equal(repositoryArray);
-                    });
-                    
+                    expect(repoDictionaries).toNot.beNil();
+                    expect(repoDictionaries.count).to.equal(2);
+                    expect(repoDictionaries).to.equal(repositoryArray);
                     done();
                 }];
-                
-            });
-            
-            it(@"is starred", ^{
-                
-                waitUntil(^(DoneCallback done) {
-                    [FISGithubAPIClient checkIfRepoIsStarredWithFullName:fullName CompletionBlock:^(BOOL starred) {
-                        expect(starred).to.beTruthy(); //Check that the correct Request was called
-                        done();
-                    }];
-                });
-            });
-            
-            it(@"is not starred", ^{
-                waitUntil(^(DoneCallback done) {
-                    [FISGithubAPIClient checkIfRepoIsStarredWithFullName:fullName CompletionBlock:^(BOOL starred) {
-                        expect(starred).to.beFalsy(); //Check that the correct Request was called
-                        done();
-                    }];
-                });
             });
         });
     });
-    context(@"does not exist", ^{
-        // find a way to fake an internet outage.
-    });
     
-    describe(@"starring a repository", ^{
-        waitUntil(^(DoneCallback done) {
-            __block BOOL calledGithubAPI=NO;
-            
-            [FISGithubAPIClient starRepoWithFullName:fullName CompletionBlock:^{
-                expect(calledGithubAPI).will.beTruthy(); //Check that the correct request was sent
-                done();
-            }];
+    describe(@"Check If Starred", ^{
+        
+        it(@"Should respond to checkStarred class method selector", ^{
+            expect([FISGithubAPIClient class]).to.respondTo(@selector(checkIfRepoIsStarredWithFullName:CompletionBlock:));
         });
         
-    });
-    
-    describe(@"unstarring a repository", ^{
-        waitUntil(^(DoneCallback done) {
-            __block BOOL calledGithubAPI=NO;
+        it(@"Should respond NO when not already starred",  ^{
             
-            [FISGithubAPIClient unstarRepoWithFullName:fullName
-                                       CompletionBlock:^{
-                                           expect(calledGithubAPI).will.beTruthy(); //Check that the correct request was sent
-                                           
-                                           done();
-                                       }];
+            __block BOOL calledGithubAPI=NO;
+
+            waitUntil(^(DoneCallback done) {
+                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                    if ([request.URL.host isEqualToString:@"api.github.com"]&&[request.URL.path isEqualToString:@"/user/starred/wycats/merb-core"] && [request.HTTPMethod isEqualToString:@"GET"])
+                    {
+                        calledGithubAPI=YES;
+                        return YES;
+                    }
+                    else
+                    {
+                        return NO;
+                    }
+                } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                    return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"not_starred.json", nil) statusCode:404 headers:@{@"Content-Type": @"application/json"}];
+                }];
+                [FISGithubAPIClient checkIfRepoIsStarredWithFullName:fullName CompletionBlock:^(BOOL starred) {
+                    expect(starred).to.beFalsy;
+                    expect(calledGithubAPI).will.beTruthy(); //Check that the correct Request was called
+                    done();
+                }];
+            });
+            
+
         });
         
+        it(@"Should respond YES when already starred",  ^{
+            waitUntil(^(DoneCallback done) {
+                __block BOOL calledGithubAPI=NO;
+                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                    if ([request.URL.host isEqualToString:@"api.github.com"]&&[request.URL.path isEqualToString:@"/user/starred/wycats/merb-core"] && [request.HTTPMethod isEqualToString:@"GET"])
+                    {
+                        calledGithubAPI=YES;
+                        return YES;
+                    }
+                    else
+                    {
+                        return NO;
+                    }
+                } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                    return [OHHTTPStubsResponse responseWithData:nil statusCode:204 headers:nil];
+                }];
+                [FISGithubAPIClient checkIfRepoIsStarredWithFullName:fullName CompletionBlock:^(BOOL starred) {
+                    expect(starred).to.beTruthy;
+                    expect(calledGithubAPI).will.beTruthy(); //Check that the correct request was sent
+                    done();
+                }];
+            });
+            
+            afterEach(^{
+                [OHHTTPStubs removeAllStubs];
+            });
+        });
     });
-    
-    
     
     describe(@"Star Repo", ^{
         it(@"should star the repo",  ^{
+            waitUntil(^(DoneCallback done) {
+                __block BOOL calledGithubAPI=NO;
+                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                    if ([request.URL.host isEqualToString:@"api.github.com"]&&[request.URL.path isEqualToString:@"/user/starred/wycats/merb-core"] && [request.HTTPMethod isEqualToString:@"PUT"])
+                    {
+                        calledGithubAPI=YES;
+                        return YES;
+                    }
+                    else
+                    {
+                        return NO;
+                    }
+                } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                    return [OHHTTPStubsResponse responseWithData:nil statusCode:204 headers:nil];
+                }];
+                [FISGithubAPIClient starRepoWithFullName:fullName CompletionBlock:^{
+                    expect(calledGithubAPI).will.beTruthy(); //Check that the correct request was sent
+                    done();
+                }];
+            });
         });
     });
     
     describe(@"Unstar Repo", ^{
         it(@"Should unstar the repo",  ^{
+            waitUntil(^(DoneCallback done) {
+                __block BOOL calledGithubAPI=NO;
+                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                    if ([request.URL.host isEqualToString:@"api.github.com"]&&[request.URL.path isEqualToString:@"/user/starred/wycats/merb-core"] && [request.HTTPMethod isEqualToString:@"DELETE"])
+                    {
+                        calledGithubAPI=YES;
+                        return YES;
+                    }
+                    else
+                    {
+                        return NO;
+                    }
+                } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                    return [OHHTTPStubsResponse responseWithData:nil statusCode:204 headers:nil];
+                }];
+                [FISGithubAPIClient unstarRepoWithFullName:fullName
+                                           CompletionBlock:^{
+                                               expect(calledGithubAPI).will.beTruthy(); //Check that the correct request was sent
+
+                                               done();
+                                           }];
+            });
         });
     });
 });
