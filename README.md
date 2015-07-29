@@ -1,7 +1,4 @@
----
-tags: apis, afnetworking, uialertview
-language: objc
----
+
 
 # Star Github Repo
 
