@@ -30,10 +30,15 @@ describe(@"FISGithubAPIClient", ^{
                 return NO;
             }
         } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-            return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"repositories.json", nil) statusCode:200 headers:@{@"Content-Type": @"application/json"}];
+            
+//            return [OHHTTPStubsResponse responseWithFileAtPath:@"repositories.json"
+//                                                    statusCode:200
+//                                                       headers:@{@"Content-Type": @"application/json"}];
+            
+            return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"repositories.json", [NSBundle mainBundle]) statusCode:200 headers:@{@"Content-Type": @"application/json"}];
         }];
         
-        NSData *data = [NSData dataWithContentsOfFile:OHPathForFileInBundle(@"repositories.json", nil)];
+        NSData *data = [NSData dataWithContentsOfFile:OHPathForFileInBundle(@"repositories.json", [NSBundle mainBundle])];
         repositoryArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     });
     
@@ -78,7 +83,7 @@ describe(@"FISGithubAPIClient", ^{
                         return NO;
                     }
                 } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                    return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"not_starred.json", nil) statusCode:404 headers:@{@"Content-Type": @"application/json"}];
+                    return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"not_starred.json", [NSBundle mainBundle]) statusCode:404 headers:@{@"Content-Type": @"application/json"}];
                 }];
                 [FISGithubAPIClient checkIfRepoIsStarredWithFullName:fullName CompletionBlock:^(BOOL starred) {
                     expect(starred).to.beFalsy;
