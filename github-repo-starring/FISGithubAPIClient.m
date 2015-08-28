@@ -26,7 +26,7 @@ NSString *const GITHUB_API_URL=@"https://api.github.com";
     }];
 }
 
-+(void)checkIfRepoIsStarredWithFullName:(NSString *)fullName AFSessionManager:(AFHTTPSessionManager *manager) CompletionBlock:(void (^)(BOOL starred))completionBlock
++(void)checkIfRepoIsStarredWithFullName:(NSString *)fullName CompletionBlock:(void (^)(BOOL starred))completionBlock
 {
     NSString *url = [NSString stringWithFormat:@"%@/user/starred/%@?client_id=%@&client_secret=%@",GITHUB_API_URL,fullName, GITHUB_CLIENT_ID,GITHUB_CLIENT_SECRET];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] init];
