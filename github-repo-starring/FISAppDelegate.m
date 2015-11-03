@@ -8,6 +8,7 @@
 
 #import "FISAppDelegate.h"
 #import <OHHTTPStubs.h>
+#import <OHHTTPStubs/OHPathHelpers.h>
 static BOOL isRunningTests(void) __attribute__((const));
 
 @implementation FISAppDelegate
@@ -27,7 +28,7 @@ static BOOL isRunningTests(void) __attribute__((const));
                 return NO;
             }
         } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-            return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"repositories.json", nil) statusCode:200 headers:@{@"Content-Type": @"application/json"}];
+            return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"repositories.json", [NSBundle mainBundle]) statusCode:200 headers:@{@"Content-Type": @"application/json"}];
         }];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
@@ -42,10 +43,10 @@ static BOOL isRunningTests(void) __attribute__((const));
         } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
             if(self.starred)
             {
-                return [OHHTTPStubsResponse responseWithData:nil statusCode:204 headers:nil];
+                return [OHHTTPStubsResponse responseWithData:[NSData data] statusCode:204 headers:nil];
             } else
             {
-                return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"not_starred.json", nil) statusCode:404 headers:@{@"Content-Type": @"application/json"}];
+                return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"not_starred.json", [NSBundle mainBundle]) statusCode:404 headers:@{@"Content-Type": @"application/json"}];
             }
         }];
 
@@ -59,7 +60,7 @@ static BOOL isRunningTests(void) __attribute__((const));
                 return NO;
             }
         } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-            return [OHHTTPStubsResponse responseWithData:nil statusCode:204 headers:nil];
+            return [OHHTTPStubsResponse responseWithData:[NSData data] statusCode:204 headers:nil];
         }];
     }
     return YES;
