@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FISConstants : NSObject
 extern NSString *const GITHUB_CLIENT_ID;
 extern NSString *const GITHUB_CLIENT_SECRET;
 extern NSString *const GITHUB_ACCESS_TOKEN;
-@end
+

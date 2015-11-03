@@ -4,10 +4,10 @@ pod 'AFNetworking'
 pod 'OHHTTPStubs'
 
 target 'github-repo-starringTests' do
-  pod 'Specta'
-  pod 'Expecta'
-  pod 'KIF'
+  pod 'Specta',     '~> 1.0'
+  pod 'Expecta',     '~> 1.0'
+  pod 'KIF',        '~> 3.3'
+  pod 'Swizzlean',   '~> 0.2' 
   pod 'OCMockito'
-  pod 'Swizzlean'
 end
 

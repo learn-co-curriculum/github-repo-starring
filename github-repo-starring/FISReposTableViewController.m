@@ -1,6 +1,6 @@
 //
 //  FISReposTableViewController.m
-//  
+//
 //
 //  Created by Joe Burgess on 5/5/14.
 //
@@ -17,21 +17,12 @@
 
 @implementation FISReposTableViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.tableView.accessibilityLabel=@"Repo Table View";
     self.tableView.accessibilityIdentifier=@"Repo Table View";
-
+    
     self.tableView.accessibilityIdentifier = @"Repo Table View";
     self.tableView.accessibilityLabel=@"Repo Table View";
     self.dataStore = [FISReposDataStore sharedDataStore];
@@ -40,18 +31,6 @@
             [self.tableView reloadData];
         }];
     }];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
@@ -72,7 +51,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"basicCell" forIndexPath:indexPath];
-
+    
     FISGithubRepository *repo = self.dataStore.repositories[indexPath.row];
     cell.textLabel.text = repo.fullName;
     return cell;
@@ -85,19 +64,20 @@
     [self.dataStore toggleStarForRepo:repo CompletionBlock:^(BOOL starred) {
         if (starred) {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-
-            NSString *message = [NSString stringWithFormat:@"You just starred %@", repo.fullName];
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Repo Starred"  message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alertView show];
+                NSString *message = [NSString stringWithFormat:@"You just starred %@", repo.fullName];
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Repo Starred" message:message preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+                [alertController addAction:okAction];
+                [self presentViewController:alertController animated:YES completion:nil];
             }];
-             
         } else
         {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-
-            NSString *message = [NSString stringWithFormat:@"You just unstarred %@", repo.fullName];
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Repo Unstarred"  message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alertView show];
+                NSString *message = [NSString stringWithFormat:@"You just unstarred %@", repo.fullName];
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Repo Unstarred" message:message preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+                [alertController addAction:okAction];
+                [self presentViewController:alertController animated:YES completion:nil];
             }];
         }
     }];

@@ -57,17 +57,18 @@ describe(@"FISReposTableViewController", ^{
             delegate.starred = NO;
             [tester tapRowAtIndexPath:ip inTableViewWithAccessibilityIdentifier:@"Repo Table View"];
 
-            //This should be in a UIAlertView
+            //This should be a UIAlertController
             [tester waitForViewWithAccessibilityLabel:@"You just starred wycats/merb-core"];
             [tester tapViewWithAccessibilityLabel:@"OK"];
             [tester waitForAbsenceOfViewWithAccessibilityLabel:@"You just starred wycats/merb-core"];
+            
         });
 
         it(@"Should unstar a starred Repo", ^{
             delegate.starred = YES;
             [tester tapRowAtIndexPath:ip inTableViewWithAccessibilityIdentifier:@"Repo Table View"];
 
-            //This should be in a UIAlertView
+            //This should be a UIAlertController
             [tester waitForViewWithAccessibilityLabel:@"You just unstarred wycats/merb-core"];
             [tester tapViewWithAccessibilityLabel:@"OK"];
             [tester waitForAbsenceOfViewWithAccessibilityLabel:@"You just unstarred wycats/merb-core"];
