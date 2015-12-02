@@ -11,3 +11,5 @@ Before you start, set up your api keys (FISConstants.m) and make sure you can ge
   3. Make a method in `FISGithubAPIClient` that unstars a repo given its `full_name`. Checkout the [Github Documentation](https://developer.github.com/v3/activity/starring/#unstar-a-repository)
   4. Create a method in `FISReposDataStore` that given a `FISGithubRepository` object, will check to see if it's starred or not and then either star or unstar the repo. In the completionBlock, there should be a `BOOL` parameter called `starred` that is `YES` if the repo was just starred, and `NO` if it was just unstarred.
   5. When a cell is selected, it should call your `FISReposDataStore` method to toggle the starred status and display a `UIAlertController` saying either "You just starred <REPO NAME>" or "You just unstarred <REPO NAME>".
+
+<a href='https://learn.co/lessons/github-repo-starring' data-visibility='hidden'>View this lesson on Learn.co</a>
