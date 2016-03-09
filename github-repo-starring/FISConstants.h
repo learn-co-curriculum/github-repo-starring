@@ -11,3 +11,4 @@
 extern NSString *const GITHUB_CLIENT_ID;
 extern NSString *const GITHUB_CLIENT_SECRET;
 
+extern NSString *const GITHUB_AUTH_TOKEN;
