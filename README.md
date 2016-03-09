@@ -23,7 +23,7 @@ We want to be able to tap on repos in the table view and have it star or unstar 
   2. Make a method in `FISGithubAPIClient` that stars a repo given its full name. Checkout the [Github Documentation](https://developer.github.com/v3/activity/starring/#star-a-repository).
   3. Make a method in `FISGithubAPIClient` that unstars a repo given its full name. Checkout the [Github Documentation](https://developer.github.com/v3/activity/starring/#unstar-a-repository).
   4. Create a method in `FISReposDataStore` that, given a `FISGithubRepository` object, checks to see if it's starred or not and then either stars or unstars the repo. That is, it should toggle the star on a given repository. In the completion block, there should be a `BOOL` parameter called `starred` that is `YES` if the repo was just starred, and `NO` if it was just unstarred.
-  5. Finally, When a cell is selected, it should call your `FISReposDataStore` method to toggle the starred status and display a `UIAlertController` saying either "You just starred <REPO NAME>" or "You just unstarred <REPO NAME>".
+  5. Finally, when a cell in the table view is selected, it should call your `FISReposDataStore` method to toggle the starred status and display a `UIAlertController` saying either "You just starred <REPO NAME>" or "You just unstarred <REPO NAME>".
 
 
 <p data-visibility='hidden'>View <a href='https://learn.co/lessons/github-repo-starring' title='Star Github Repo'>Star Github Repo</a> on Learn.co and start learning to code for free.</p>
